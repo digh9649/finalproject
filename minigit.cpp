@@ -59,20 +59,44 @@ void compare(string f1, string f2)
  
 }
 
-bool searchHelper(singlyNode*head)
+bool searchHelper(singlyNode*head, string name)
 {
- 
+    singlyNode *current = head; 
+    while(current !=NULL)
+    {
+        if(current->fileName==name)
+        {
+            return true; 
+        }
+        current = current->next; 
+    }
+    return false; 
 }
  
 void minigit::remove(string filename, singlyNode *head)
 {
-    bool exist =  searchHelper(head); 
+     
+    bool exist =  searchHelper(head, filename); 
     if(exist)
     {
         if(head->fileName == filename)
         {
-            
+            singlyNode *temp = head;
+            if(head->next ==NULL)
+            {
+                cout << "I'm not sure what to do" << endl; 
+                return; 
+            }
+            head->fileName = head->next->fileName; 
+            head ->fileVersion = head ->next->fileVersion; 
+
+            temp= head->next; 
+            head->next = head->next->next; 
+            delete temp; 
+            return; 
         }
+        singlyNode *prev = head; 
+        //add code for the rest
     }
 }
  
