@@ -23,7 +23,9 @@ class minigit
     private: 
         
     public: 
-        //Add file
+        minigit();
+        ~minigit(); 
+        void add(string name, singlyNode *head); 
         void remove(string filename, singlyNode *head);
         //Commit
         //Checkout

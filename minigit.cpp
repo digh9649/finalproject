@@ -3,9 +3,20 @@
 #include <fstream>
 #include <sstream>
 #include <string>
- 
+#include <filesystem>
 using namespace std; 
- 
+
+//fs = std::filesystem;
+
+minigit::minigit()
+{
+//fs::create_directory(".minigit"); 
+}
+
+minigit::~minigit()
+{
+//fs::remove_all(".minigit");
+}
 
 void copy(string file)
 {
@@ -72,7 +83,45 @@ bool searchHelper(singlyNode*head, string name)
     }
     return false; 
 }
+
+singlyNode* getSLL(string fileName, string fileVersion)
+{
+    singlyNode *newNode = new singlyNode; 
+    newNode->fileName = fileName; 
+    newNode->fileVersion = fileVersion; 
+}
+
  
+void minigit::add(string name,singlyNode *head)
+{
+    bool exist = searchHelper(head, name); 
+    string version= ""; 
+    if(exist)
+    {
+        cout << "already been added" << endl; 
+    }
+    else if(!exist)
+    {
+       //version = 
+        singlyNode *temp = new singlyNode; 
+        singlyNode *last = head; 
+        temp->fileName= name; 
+        temp->fileVersion = version;   
+        temp->next = NULL; 
+        if(head==NULL)
+        {
+            head = temp; 
+            return; 
+        } 
+        while(last->next!=NULL)
+        {
+            last = last->next; 
+        } 
+        last->next = temp; 
+        return; 
+    }
+}
+
 void minigit::remove(string filename, singlyNode *head)
 {
      
