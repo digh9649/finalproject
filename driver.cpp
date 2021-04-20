@@ -24,14 +24,20 @@ int main()
     string filenameAdd = "";
     string filenameRemove = "";  
     int commitNumber;
+    int initCommit;
     displayMenu(); 
     cin >> input; 
+
+    minigit m1;
 
     while(1)
     {
         if(input ==1)
         {
+            initCommit =0; 
             cout << "new repository initialized" << endl; 
+            m1.initialize(initCommit);
+            initCommit++; 
         }
         else if (input ==2)
         {

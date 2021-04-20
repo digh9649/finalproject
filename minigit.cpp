@@ -6,16 +6,16 @@
 #include <filesystem>
 using namespace std; 
 
-//fs = std::filesystem;
+namespace fs = std::filesystem;
 
 minigit::minigit()
 {
-//fs::create_directory(".minigit"); 
+    fs::create_directory(".minigit"); 
 }
 
 minigit::~minigit()
 {
-//fs::remove_all(".minigit");
+    fs::remove_all(".minigit");
 }
 
 void copy(string file)
@@ -91,7 +91,11 @@ singlyNode* getSLL(string fileName, string fileVersion)
     newNode->fileVersion = fileVersion; 
 }
 
- 
+void minigit::initialize(int num)
+{
+    
+}
+
 void minigit::add(string name,singlyNode *head)
 {
     bool exist = searchHelper(head, name); 

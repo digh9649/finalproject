@@ -29,6 +29,7 @@ class minigit
         ~minigit(); 
         void add(string name, singlyNode *head); 
         void remove(string filename, singlyNode *head);
+        void initialize(int commitNumber); 
         //Commit
         //Checkout
 };
