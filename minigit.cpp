@@ -65,7 +65,7 @@ void compare(string f1, string f2)
     }
     else if(!compare)
     {
-        cout << "Not a match bitch" <<endl; 
+        cout << "Not a match " <<endl; 
     }
  
 }

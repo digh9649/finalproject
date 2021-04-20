@@ -4,6 +4,13 @@
 #include <iostream>
 using namespace std; 
  
+
+struct singlyNode{
+    string fileName; //local file
+    string fileVersion; //name file in .minigit folder
+    singlyNode *next;
+};
+ 
 struct doublyNode{
     int commitNumber; 
     singlyNode *head; 
@@ -11,12 +18,7 @@ struct doublyNode{
     doublyNode *next;
 };
  
-struct singlyNode{
-    string fileName; //local file
-    string fileVersion; //name file in .minigit folder
-    singlyNode *next;
-};
- 
+
  
 class minigit
 {
