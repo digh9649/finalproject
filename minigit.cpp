@@ -49,7 +49,7 @@ bool compare(string f1, string f2)
     string line2; 
  
     int count=0; 
-    bool compare=false; 
+    bool compared=false; 
  
     infile1.open(f1); 
     infile2.open(f2); 
@@ -60,22 +60,22 @@ bool compare(string f1, string f2)
         {
             if(line1==line2)
             { 
-                compare = true; 
+                compared = true; 
             }
         }
         
     }
-    if(compare)
+    if(compared)
     {
         cout << "complete match " << endl; 
-        return true;
+        
     }
-    else if(!compare)
+    else if(!compared)
     {
         cout << "Not a match " <<endl;
-        return false;  
+        
     }
- 
+    return compared; 
 }
 
 bool searchHelper(singlyNode*head, string name)
@@ -193,7 +193,7 @@ void minigit::remove(string filename)
 
 void minigit::commit(int commitNum, string fileVersion)
 {
-    
+    bool same; 
     ifstream inFile; 
     ofstream outFile; 
     singlyNode *start = currentCommit->head;  
@@ -208,7 +208,15 @@ void minigit::commit(int commitNum, string fileVersion)
         else
         {
             //use compare function
-            //  copy()
+            same = compare(start->fileName, x);
+            if(!same)
+            {
+                copy(start->fileName, fileVersion); 
+            }
+            else
+            {
+                cout << "No change" << endl; 
+            }
         }
         start = start->next; 
     }
