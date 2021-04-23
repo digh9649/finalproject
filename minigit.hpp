@@ -21,17 +21,16 @@ struct doublyNode{
 
  
 class minigit
-{
-    private: 
-        
+{    
     public: 
         minigit();
         ~minigit(); 
-        void add(string name, singlyNode *head); 
-        void remove(string filename, singlyNode *head);
+        void add(int num, string name); 
+        void remove(string filename);
         void initialize(int commitNumber); 
-        //Commit
-        //Checkout
+        void commit(int num, string fileVersion); 
+        void checkout(int commitNum); 
+        doublyNode *currentCommit; 
 };
  
 #endif

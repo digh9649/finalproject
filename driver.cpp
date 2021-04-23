@@ -9,6 +9,7 @@ using namespace std;
 
 void displayMenu()
 {
+    cout << "Select a numerical option" << endl; 
     cout << "===== Main Menu =====" << endl; 
     cout << "1. Initialize new repository" <<endl; 
     cout << "2. Add a file" << endl; 
@@ -23,48 +24,59 @@ int main()
     int input; 
     string filenameAdd = "";
     string filenameRemove = "";  
-    int commitNumber;
-    int initCommit;
+    int commitNumber =0;
+    int initCommit =0;
+    minigit m1;
+    int version=0;
+   
+    singlyNode * start = m1.currentCommit->head;
+
     displayMenu(); 
     cin >> input; 
 
-    minigit m1;
-
-    while(1)
+    while(input !=6)
     {
-        if(input ==1)
+        string strVersion = to_string(commitNumber);
+        switch(input)
         {
-            initCommit =0; 
-            cout << "new repository initialized" << endl; 
-            m1.initialize(initCommit);
-            initCommit++; 
-        }
-        else if (input ==2)
-        {
-            cout << "Enter file name" << endl; 
-            cin >> filenameAdd; 
-        }
-        else if(input ==3)
-        {
-            cout << "Enter file name" << endl; 
-            cin >> filenameRemove; 
-        }
-        else if(input ==4)
-        {
-            cout << "Files have been commited" << endl; 
-        }
-        else if(input ==5)
-        {
-            cout << "Enter a commit number" << endl; 
-            cin >> commitNumber; 
-        }
-        else if(input==6)
-        {
-            cout << "Goodbye!" << endl; 
+            case 1:  
+                cout << "new repository initialized" << endl; 
+                m1.initialize(initCommit);   
+                initCommit++; 
             break; 
+
+            case 2: 
+                cout << "Enter file name" << endl; 
+                cin >> filenameAdd; 
+                m1.add(version,filenameAdd);
+
+            break; 
+
+            case 3: 
+                cout << "Enter file name" << endl; 
+                cin >> filenameRemove; 
+                m1.remove(filenameRemove); 
+            break; 
+
+            case 4: 
+                 cout << "Files have been commited" << endl; 
+                 m1.commit(commitNumber,strVersion); 
+                 commitNumber++; 
+            break; 
+
+            case 5:  
+                cout << "Enter a commit number" << endl; 
+                cin >> commitNumber; 
+            break; 
+
+            case 6:
+                 cout << "Goodbye!" << endl; 
+            
+            break;
         }
-        displayMenu(); 
-        cin>>input; 
+        displayMenu();
+        cin>>input;
+        
     }
     return 0; 
 }
