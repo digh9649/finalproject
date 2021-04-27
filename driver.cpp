@@ -28,7 +28,7 @@ int main()
     int initCommit =0;
     minigit m1;
     int version=0;
-   
+    int currCommitNum =1;
     singlyNode * start = m1.currentCommit->head;
 
     displayMenu(); 
@@ -59,14 +59,16 @@ int main()
             break; 
 
             case 4: 
-                 cout << "Files have been commited" << endl; 
-                 m1.commit(commitNumber,strVersion); 
-                 commitNumber++; 
+            
+                 m1.commit(commitNumber,strVersion);
+                 cout << "Files have been commited" << endl;  
+                // commitNumber++;
+                 currCommitNum++;  
             break; 
-
             case 5:  
                 cout << "Enter a commit number" << endl; 
                 cin >> commitNumber; 
+                 m1.checkout(commitNumber); 
             break; 
 
             case 6:

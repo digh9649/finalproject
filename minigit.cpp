@@ -8,16 +8,31 @@ using namespace std;
 
 namespace fs = std::filesystem;
 
-
+minigit::minigit()
+{
+    return; 
+}
 
 minigit::~minigit()
 {
     fs::remove_all(".minigit");
 }
 
-minigit::minigit()
+doublyNode *getDLL(int commitNum)
 {
-    return; 
+   doublyNode *newNode = new doublyNode; 
+   newNode ->commitNumber = commitNum;
+   newNode->head = NULL; 
+   newNode->next = NULL; 
+   newNode->previous = NULL;  
+   return newNode; 
+}
+
+void minigit::initialize(int num)
+{
+    fs::create_directory(".minigit");
+    currentCommit = getDLL(num); 
+    currentCommit->head = NULL; 
 }
 
 void copy(string file,string version)
@@ -26,19 +41,17 @@ void copy(string file,string version)
     inFile.open(file); 
     string line; 
     ofstream myfile; 
-    
+    cout << "from copy function version" << version << endl; 
     myfile.open(".minigit/"+ file + version); 
 
     while(getline(inFile, line))
     {
         myfile<<line; 
     }
+    myfile.close(); 
+    inFile.close(); 
 }
 
-void copy2(string currFile, string verFile)
-{
-
-}
 
 bool compare(string f1, string f2)
 {
@@ -49,7 +62,7 @@ bool compare(string f1, string f2)
     string line2; 
  
     int count=0; 
-    bool compared=false; 
+    bool compared; 
  
     infile1.open(f1); 
     infile2.open(f2); 
@@ -62,9 +75,14 @@ bool compare(string f1, string f2)
             { 
                 compared = true; 
             }
+            else
+            {
+                compared = false; 
+            }
         }
         
     }
+
     if(compared)
     {
         cout << "complete match " << endl; 
@@ -102,23 +120,6 @@ singlyNode* getSLL(string fileName, string fileVersion)
     return newNode; 
 }
 
-doublyNode *getDLL(int commitNum)
-{
-   doublyNode *newNode = new doublyNode; 
-   newNode ->commitNumber = commitNum;
-   newNode->head = NULL; 
-   newNode->next = NULL; 
-   newNode->previous = NULL;  
-   return newNode; 
-}
-
-void minigit::initialize(int num)
-{
-    fs::create_directory(".minigit");
-    getDLL(num); 
-    currentCommit->head=NULL; 
-    cout << num << endl; 
-}
 
 void minigit::add(int versionNum, string name)
 {
@@ -139,7 +140,7 @@ void minigit::add(int versionNum, string name)
         }
         else if(!exist)
         {
-            version = name + to_string(versionNum);
+            version = to_string(versionNum);
             singlyNode *temp = getSLL(name, version);
             singlyNode *last = currentCommit->head; 
             if(currentCommit->head==NULL)
@@ -190,6 +191,15 @@ void minigit::remove(string filename)
     }
 }
  
+doublyNode* commitDLL(int commitNum, doublyNode *current)
+{
+    doublyNode *nn = new doublyNode; 
+    nn->commitNumber = commitNum; 
+    nn->previous = current; 
+    nn->next = NULL; 
+    nn->head= NULL;
+    return nn; 
+}
 
 void minigit::commit(int commitNum, string fileVersion)
 {
@@ -199,39 +209,101 @@ void minigit::commit(int commitNum, string fileVersion)
     singlyNode *start = currentCommit->head;  
     while(start !=NULL)
     {
-        string x = ".minigit/" + start->fileName + " " + start->fileVersion; 
+         
+        string x = ".minigit/" + start->fileName + start->fileVersion;
+        cout << "file version: " << start->fileVersion << endl; 
+        cout << x << endl; 
         inFile.open(x); 
         if(!inFile)
         {
+            cout << "it's not in minigit" << endl; 
             copy(start->fileName,fileVersion); 
         }
-        else
+        else 
         {
-            //use compare function
-            same = compare(start->fileName, x);
-            if(!same)
+            string toCompare = start->fileName+ start->fileVersion; 
+            same = compare(start->fileName, toCompare);
+            if(same)
             {
-                copy(start->fileName, fileVersion); 
+                cout << "Nothing has changed" << endl;  
             }
-            else
+            else if(!same)
             {
-                cout << "No change" << endl; 
+                int numVersion = stoi(fileVersion); 
+                numVersion ++; 
+                start->fileVersion = to_string(numVersion); 
+                cout << start->fileVersion << endl; 
+                copy(start->fileName, start->fileVersion); 
             }
+           
         }
         start = start->next; 
     }
 
-    //traverse through the SLL and check if the fileversion exists in minigit directory
-        // does not exist, copy the file from current directory into minigit
-            // the name should be from the node's fileversion member (only if it's been added for the first time)
-        // does exist, check if file has been changed
-            // if unchanged, no nothing
-            // if changed, copy the file from current directory into mingit (same as above) and increment it's version number and update SLL node with new version number
+   /*
+    doublyNode *newDLL = commitDLL(commitNum,currentCommit); 
+    cout <<"new commit number"<< newDLL->commitNumber<<endl; 
+    singlyNode *curr = currentCommit->head;
+    for(curr; curr!=NULL; curr=curr->next)
+    {
+        cout << curr->fileName<< endl; 
+        singlyNode *copyCurr = new singlyNode();
+        copyCurr->fileName = curr->fileName; 
+        copyCurr->fileVersion = curr->fileVersion; 
+        copyCurr->next = curr->next; 
+        if(copyCurr == currentCommit->head)
+        {
+           // cout<< copyCurr->fileName<< endl; 
+            newDLL->head = copyCurr; 
+        }
+        //traverse using copycurr?
+      
+        
+    }
+  
+    
+    while(curr->next!=NULL)
+    {
+        singlyNode *copyCurr = new singlyNode;
+        copyCurr->fileName = curr->fileName; 
+        copyCurr->fileVersion = curr->fileVersion; 
+        copyCurr->next = curr->next; 
+        cout << "creating a new node" << endl; 
+        if(copyCurr == currentCommit->head)
+        {
+            newDLL->head = copyCurr; 
+        }
+        cout << "before traversing" << endl;
+        curr= curr->next; 
+        curr->next = copyCurr; 
+    }
+    
 
-// after scanning SLL
-    //final step created new DLL node
-    // exact copy of SLL gets created from previous node
-    // DLL commit number increases
-    doublyNode *newDLL = getDLL(commitNum); 
+    cout << "after traversing" << endl; 
+    currentCommit->next = newDLL; 
+    currentCommit = currentCommit->next; 
+    cout << "end of commit" << endl; 
+    return;
+    */
+}
 
+void minigit::checkout(int commit)
+{
+    cout << "before checkout " << endl; 
+    while(currentCommit!=NULL)
+    {
+        cout << "inside while loop" << endl; 
+        if(currentCommit->commitNumber == commit)
+        {
+            cout << currentCommit->commitNumber<<endl; 
+            singlyNode*curr = currentCommit->head; 
+            while(curr!=NULL)
+            {
+                cout << curr->fileName << " version: " << curr->fileVersion << endl;
+                copy(curr->fileName, curr->fileVersion); 
+                curr= curr->next; 
+            }
+        }
+        currentCommit = currentCommit->next;
+    }
 }
