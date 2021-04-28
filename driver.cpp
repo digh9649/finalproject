@@ -29,7 +29,9 @@ int main()
     minigit m1;
     int version=0;
     int currCommitNum =1;
-    singlyNode * start = m1.currentCommit->head;
+    //singlyNode * start = m1.currentCommit->head;
+    bool init = false; 
+    bool check = false; 
 
     displayMenu(); 
     cin >> input; 
@@ -40,35 +42,82 @@ int main()
         switch(input)
         {
             case 1:  
-                cout << "new repository initialized" << endl; 
+                cout << "New repository minigit initialized" << endl; 
                 m1.initialize(initCommit);   
                 initCommit++; 
+                init = true; 
             break; 
 
             case 2: 
-                cout << "Enter file name" << endl; 
-                cin >> filenameAdd; 
-                m1.add(version,filenameAdd);
-
+                if(init && !check)
+                {
+                    cout << "Enter file name" << endl; 
+                    cin >> filenameAdd; 
+                    m1.add(version,filenameAdd);
+                }
+                else if(!init)
+                {
+                    cout << "Repository has not been initialized." << endl; 
+                    cout << "You must initialize a repository before adding, removing, committing or checking out." << endl; 
+                }
+                else if(check)
+                {
+                    cout << "You are currently checking another commit. You can not add, remove files or commit" << endl; 
+                }
+                
             break; 
 
             case 3: 
-                cout << "Enter file name" << endl; 
-                cin >> filenameRemove; 
-                m1.remove(filenameRemove); 
+                if(init && !check)
+                {
+                    cout << "Enter file name" << endl; 
+                    cin >> filenameRemove; 
+                    m1.remove(filenameRemove); 
+                }
+                 else if(!init)
+                {
+                    cout << "Repository has not been initialized." << endl; 
+                    cout << "You must initialize a repository before adding, removing, committing or checking out." << endl; 
+                }
+                else if(check)
+                {
+                    cout << "You are currently checking another commit. You can not add, remove files or commit" << endl; 
+                }
             break; 
 
             case 4: 
-            
-                 m1.commit(commitNumber,strVersion);
-                 cout << "Files have been commited" << endl;  
-                // commitNumber++;
-                 currCommitNum++;  
+                if(init && !check)
+                {
+                    m1.commit(commitNumber,strVersion);
+                    cout << "has been commited" << endl;  
+                    // commitNumber++;
+                    currCommitNum++;  
+                }
+                 else if(init)
+                {
+                    cout << "Repository has not been initialized." << endl; 
+                    cout << "You must initialize a repository before adding, removing, committing or checking out." << endl; 
+                }
+                else if(check)
+                {
+                    cout << "You are currently checking another commit. You can not add, remove files or commit" << endl; 
+                }
+                 
             break; 
-            case 5:  
-                cout << "Enter a commit number" << endl; 
-                cin >> commitNumber; 
-                 m1.checkout(commitNumber); 
+            case 5: 
+                if(init)
+                {
+                    cout << "Enter a commit number" << endl; 
+                    cin >> commitNumber; 
+                    m1.checkout(commitNumber);
+                    check = true;  
+
+                } 
+                 else
+                {
+                    cout << "Repository has not been initialized." << endl; 
+                    cout << "You must initialize a repository before adding, removing, committing or checking out." << endl; 
+                }
             break; 
 
             case 6:

@@ -41,7 +41,7 @@ void copy(string file,string version)
     inFile.open(file); 
     string line; 
     ofstream myfile; 
-    cout << "from copy function version" << version << endl; 
+    //ofstream::trunc; 
     myfile.open(".minigit/"+ file + version); 
 
     while(getline(inFile, line))
@@ -83,16 +83,6 @@ bool compare(string f1, string f2)
         
     }
 
-    if(compared)
-    {
-        cout << "complete match " << endl; 
-        
-    }
-    else if(!compared)
-    {
-        cout << "Not a match " <<endl;
-        
-    }
     return compared; 
 }
 
@@ -128,7 +118,7 @@ void minigit::add(int versionNum, string name)
     bool exist = searchHelper(currentCommit->head, name); 
     if(!directoryExist)
     {
-        cout<< "Enter a valid name" << endl; 
+        cout<< "This file does not exist. Enter a valid name" << endl; 
        
     }
     if(directoryExist)
@@ -136,7 +126,7 @@ void minigit::add(int versionNum, string name)
              
         if(exist)
         {
-            cout << "already been added" << endl; 
+            cout << "This file has already been added" << endl; 
         }
         else if(!exist)
         {
@@ -189,6 +179,11 @@ void minigit::remove(string filename)
             pres->next = NULL; 
        }
     }
+    else
+    {
+        cout << "This file does not exist" << endl; 
+        cout << "Enter a valid name" << endl; 
+    }
 }
  
 doublyNode* commitDLL(int commitNum, doublyNode *current)
@@ -211,12 +206,9 @@ void minigit::commit(int commitNum, string fileVersion)
     {
          
         string x = ".minigit/" + start->fileName + start->fileVersion;
-        cout << "file version: " << start->fileVersion << endl; 
-        cout << x << endl; 
         inFile.open(x); 
         if(!inFile)
         {
-            cout << "it's not in minigit" << endl; 
             copy(start->fileName,fileVersion); 
         }
         else 
@@ -240,67 +232,51 @@ void minigit::commit(int commitNum, string fileVersion)
         start = start->next; 
     }
 
-   /*
+   
     doublyNode *newDLL = commitDLL(commitNum,currentCommit); 
-    cout <<"new commit number"<< newDLL->commitNumber<<endl; 
+    singlyNode *fileListHead = 0; 
+    singlyNode *fileListCurr = 0; 
+
     singlyNode *curr = currentCommit->head;
     for(curr; curr!=NULL; curr=curr->next)
     {
-        cout << curr->fileName<< endl; 
+        cout << curr->fileName << " "; 
         singlyNode *copyCurr = new singlyNode();
         copyCurr->fileName = curr->fileName; 
         copyCurr->fileVersion = curr->fileVersion; 
-        copyCurr->next = curr->next; 
-        if(copyCurr == currentCommit->head)
+        copyCurr->next = NULL; 
+       
+        if(fileListCurr!=0)
         {
-           // cout<< copyCurr->fileName<< endl; 
-            newDLL->head = copyCurr; 
+            fileListCurr->next = copyCurr; 
         }
-        //traverse using copycurr?
-      
-        
+        if(fileListHead ==NULL)
+        {
+            fileListHead = copyCurr; 
+        }
+        fileListCurr = copyCurr; 
     }
+    newDLL->head = fileListHead; 
+    currentCommit = newDLL; 
   
-    
-    while(curr->next!=NULL)
-    {
-        singlyNode *copyCurr = new singlyNode;
-        copyCurr->fileName = curr->fileName; 
-        copyCurr->fileVersion = curr->fileVersion; 
-        copyCurr->next = curr->next; 
-        cout << "creating a new node" << endl; 
-        if(copyCurr == currentCommit->head)
-        {
-            newDLL->head = copyCurr; 
-        }
-        cout << "before traversing" << endl;
-        curr= curr->next; 
-        curr->next = copyCurr; 
-    }
-    
-
-    cout << "after traversing" << endl; 
-    currentCommit->next = newDLL; 
-    currentCommit = currentCommit->next; 
-    cout << "end of commit" << endl; 
-    return;
-    */
 }
 
 void minigit::checkout(int commit)
 {
-    cout << "before checkout " << endl; 
+    ofstream myfile; 
+   
+     
     while(currentCommit!=NULL)
     {
-        cout << "inside while loop" << endl; 
+        
         if(currentCommit->commitNumber == commit)
         {
             cout << currentCommit->commitNumber<<endl; 
             singlyNode*curr = currentCommit->head; 
             while(curr!=NULL)
             {
-                cout << curr->fileName << " version: " << curr->fileVersion << endl;
-                copy(curr->fileName, curr->fileVersion); 
+                myfile.open(".minigit/"+ curr->fileName+curr->fileVersion); 
+                //copy(curr->fileName, curr->fileVersion); 
                 curr= curr->next; 
             }
         }
